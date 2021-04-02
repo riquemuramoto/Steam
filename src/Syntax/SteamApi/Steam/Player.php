@@ -34,6 +34,10 @@ class Player extends Client
     public function GetPlayerLevelDetails()
     {
         $details = $this->GetBadges();
+        
+        if(count((array)$details) == 0){
+            return NULL;
+        }
 
         $details = new Level($details);
 
@@ -131,6 +135,20 @@ class Player extends Client
         $client = $this->getServiceResponse($arguments);
 
         return $client->lender_steamid;
+    }
+
+    public function IsGameStatsPublic()
+    {
+        // Set up the api details
+        $this->setApiDetails('GetOwnedGames', 'v0001');
+
+        // Set up the arguments
+        $arguments = ['steamId' => $this->steamId];
+
+        // Get the client
+        $client = $this->getServiceResponse($arguments);
+
+        return isset($client->game_count);
     }
 
     protected function convertToObjects($games)
